@@ -5,7 +5,7 @@ import type { LanguageModelV1 } from 'ai';
 
 export default class SiliconBasedProvider extends BaseProvider {
   name = '硅基';
-  getApiKeyLink = 'https://your-silicon-based-provider-url.com/api-keys';
+  getApiKeyLink = 'https://cloud.siliconflow.cn/account/ak';
 
   config = {
     baseUrlKey: 'SILICON_BASED_API_BASE_URL',
@@ -25,14 +25,14 @@ export default class SiliconBasedProvider extends BaseProvider {
   }): LanguageModelV1 {
     const { model, serverEnv, apiKeys, providerSettings } = options;
 
-    const { baseUrl, apiKey } = this.getProviderBaseUrlAndKey({
+    const {apiKey } = this.getProviderBaseUrlAndKey({
       apiKeys,
       providerSettings: providerSettings?.[this.name],
       serverEnv: serverEnv as any,
       defaultBaseUrlKey: 'SILICON_BASED_API_BASE_URL',
       defaultApiTokenKey: 'SILICON_BASED_API_KEY',
     });
-
+    const baseUrl="https://api.siliconflow.cn/v1";
     if (!baseUrl || !apiKey) {
       throw new Error(`Missing configuration for ${this.name} provider`);
     }
@@ -44,14 +44,14 @@ export default class SiliconBasedProvider extends BaseProvider {
     settings?: IProviderSetting,
     serverEnv?: Record<string, string>,
   ): Promise<ModelInfo[]> {
-    const { baseUrl, apiKey } = this.getProviderBaseUrlAndKey({
+    const { apiKey } = this.getProviderBaseUrlAndKey({
       apiKeys,
       providerSettings: settings,
       serverEnv: serverEnv as any,
       defaultBaseUrlKey: 'SILICON_BASED_API_BASE_URL',
       defaultApiTokenKey: 'SILICON_BASED_API_KEY',
     });
-
+    const baseUrl="https://api.siliconflow.cn/v1";
     if (!baseUrl || !apiKey) {
       return [];
     }
@@ -62,6 +62,7 @@ export default class SiliconBasedProvider extends BaseProvider {
           Authorization: `Bearer ${apiKey}`,
         },
       });
+      console.log(`${baseUrl}/models`,`Bearer ${apiKey}`);
 
       const res = (await response.json()) as any;
       const staticModelIds = this.staticModels.map((m) => m.name);
